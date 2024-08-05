@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en" id="swap">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Swap</title>
+    <link rel="stylesheet" href="../style.css">
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+</head>
+<body>
+
+    <section class="swap__overlay">
+        <section class="alert__message">
+            <div class="first_row">
+                <img src="../assets/Group 25.png" alt="alert">
+                <p>To use the wallet, you need to deploy it<br>on the network using a TRX transaction</p>
+            </div> 
+            <a href="https://sugar-goose.github.io/swallet_sugarteam/deploy/" class="deploy__button">Deploy Wallet</a>
+        </section>
+    </section>
+
+    <section class="swap__coins">
+        <div class="first__coin coin__swap">
+            <h3 class="swap__from">FROM</h3>
+            <div class="asset" id="from-card">
+                <div class="leftrow">
+                    <img src="../assets/crypto_icons/btc.png" alt="btc">
+                    <div class="leftrow__text">
+                        <h3>BTC</h3>
+                        <h4>$<span id="btcPrice"></span></h4>
+                    </div>
+                </div>
+    
+                <div class="rightrow">
+                    <img src="../assets/Arrow_down.png" alt="">
+                </div>
+            </div>
+            <input type="number" class="swap__input" placeholder="0">
+        </div>
+
+        <div class="second__coin coin__swap">
+            <h3 class="swap__from">TO</h3>
+            <div class="asset" id="to-card">
+                <div class="leftrow">
+                    <img src="../assets/crypto_icons/usdt.png" alt="btc">
+                    <div class="leftrow__text">
+                        <h3>USDT</h3>
+                        <h4>$0.98</h4>
+                    </div>
+                </div>
+    
+                <div class="rightrow">
+                    <img src="../assets/Arrow_down.png" alt="">
+                </div>
+            </div>
+            <input type="number" class="swap__input" placeholder="0">
+        </div>
+    </section>
+
+    <section class="buttons">
+        <div class="btns_container">
+            <a href="#" class="primary__blue__btn disabled swap__button__">SWAP</a>
+        </div>
+    </section>
+
+    <section class="bottom__menu">
+        <a href="/swallet_sugarteam/main_page" class="menu__button"><img src="../assets/Home Page.png" alt=""></a>
+        <a href="/swallet_sugarteam/swap" class="menu__button active"><img src="../assets/Swap.png" alt=""></a>
+        <a href="/swallet_sugarteam/settings" class="menu__button"><img src="../assets/Gear.png" alt=""></a>
+    </section>
+</body>
+<script src="../index.js"></script>
+</html>
