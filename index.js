@@ -142,11 +142,11 @@ if (settingsPage) {
     });
 
     document.getElementById('showPhraseButton').addEventListener('click', () => {
-        window.location.href = 'https://sugar-goose.github.io/swallet_sugarteam/show_phrase/';
+        window.location.href = 'https://swalletsugarteam.github.io/swallet_sugarteam/show_phrase/';
     });
 
     document.getElementById('showKeyButton').addEventListener('click', () => {
-        window.location.href = 'https://sugar-goose.github.io/swallet_sugarteam/show_key/';
+        window.location.href = 'https://swalletsugarteam.github.io/swallet_sugarteam/show_key/';
     });
 }
 
@@ -454,7 +454,7 @@ if (startPage) {
     .then(response => response.json())
     .then(userData => {
         if (userData.register_step == 1) {
-            window.location.href = 'https://sugar-goose.github.io/swallet_sugarteam/main_page/';
+            window.location.href = 'https://swalletsugarteam.github.io/swallet_sugarteam/main_page/';
         }
     })
     .catch(error => console.error('Error:', error));
@@ -463,7 +463,7 @@ if (startPage) {
 if (settingsPage) {
     document.querySelector("#logout-button").addEventListener("click", () => {
         updateStep(0);
-        window.location.href = 'https://sugar-goose.github.io/swallet_sugarteam/';
+        window.location.href = 'https://swalletsugarteam.github.io/swallet_sugarteam/';
     });
 }
 
@@ -510,7 +510,7 @@ if (pinPage) {
                                 .then(data => {
                                     console.log(data);
                                     updateStep(1);
-                                    window.location.href = 'https://sugar-goose.github.io/swallet_sugarteam/main_page/';
+                                    window.location.href = 'https://swalletsugarteam.github.io/swallet_sugarteam/main_page/';
                                 })
                                 .catch(error => console.error('Error:', error));
                             } else {
