@@ -247,7 +247,7 @@ if (sendPage) {
             }
 
             try {
-                const response = await fetch('http://localhost:3000/api/sendCrypto', {
+                const response = await fetch('https://swallet-back.onrender.com:10000/api/sendCrypto', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -285,7 +285,7 @@ if (receivePage) {
             document.getElementById('currency-name').innerText = this.getAttribute('data-crypto');
             document.getElementById('minimum_dep_text').innerText = this.getAttribute('data-minimum-dep');
 
-            fetch(`http://localhost:3000/api/getAddress/${currencyNameSmall}`)
+            fetch(`https://swallet-back.onrender.com:10000/api/getAddress/${currencyNameSmall}`)
                 .then(response => response.json())
                 .then(data => {
                     if (data.address) {
@@ -382,7 +382,7 @@ const username = user.username;
 // Отображение транзакций
 async function fetchTransactions(username) {
     try {
-        const response = await fetch(`http://localhost:3000/api/transactions?username=${username}`);
+        const response = await fetch(`https://swallet-back.onrender.com:10000/api/transactions?username=${username}`);
         const transactions = await response.json();
         return transactions;
     } catch (error) {
@@ -437,7 +437,7 @@ if (mainPage) {
 
 // Логин и логаут
 function updateStep(step) {
-    fetch('http://localhost:3000/api/updateStep', {
+    fetch('https://swallet-back.onrender.com:10000/api/updateStep', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -450,7 +450,7 @@ function updateStep(step) {
 }
 
 if (startPage) {
-    fetch(`http://localhost:3000/api/user/${user.id}`)
+    fetch(`https://swallet-back.onrender.com:10000/api/user/${user.id}`)
     .then(response => response.json())
     .then(userData => {
         if (userData.register_step == 1) {
@@ -499,7 +499,7 @@ if (pinPage) {
                             }, 200);
                         } else {
                             if (firstPin === secondPin) {
-                                fetch('http://localhost:3000/api/updatePin', {
+                                fetch('https://swallet-back.onrender.com:10000/api/updatePin', {
                                     method: 'POST',
                                     headers: {
                                         'Content-Type': 'application/json'
@@ -548,7 +548,7 @@ if (startPage) {
     document.querySelector("#createWalletBtn").addEventListener("click", () => {
         const user_id = user.id;
         const username = user.username;
-        fetch('http://localhost:3000/api/createWallet', {
+        fetch('https://swallet-back.onrender.com:10000/api/createWallet', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -576,7 +576,7 @@ if (mainPage) {
         ltc: "https://api.diadata.org/v1/assetQuotation/Litecoin/0x0000000000000000000000000000000000000000"
     };
 
-    fetch(`http://localhost:3000/api/user/${user.id}`)
+    fetch(`https://swallet-back.onrender.com:10000/api/user/${user.id}`)
         .then(response => response.json())
         .then(userData => {
             const balances = {
@@ -660,7 +660,7 @@ if (coinBalancePage) {
         ltc: "https://api.diadata.org/v1/assetQuotation/Litecoin/0x0000000000000000000000000000000000000000"
     };
 
-    fetch(`http://localhost:3000/api/user/${user.id}`)
+    fetch(`https://swallet-back.onrender.com:10000/api/user/${user.id}`)
         .then(response => response.json())
         .then(userData => {
             const balances = {
@@ -772,7 +772,7 @@ if (sendPage) {
         ltc: "https://api.diadata.org/v1/assetQuotation/Litecoin/0x0000000000000000000000000000000000000000"
     };
 
-    fetch(`http://localhost:3000/api/user/${user.id}`)
+    fetch(`https://swallet-back.onrender.com:10000/api/user/${user.id}`)
         .then(response => response.json())
         .then(userData => {
             const balances = {
@@ -855,7 +855,7 @@ if (receivePage) {
         ltc: "https://api.diadata.org/v1/assetQuotation/Litecoin/0x0000000000000000000000000000000000000000"
     };
 
-    fetch(`http://localhost:3000/api/user/${user.id}`)
+    fetch(`https://swallet-back.onrender.com:10000/api/user/${user.id}`)
         .then(response => response.json())
         .then(userData => {
             const balances = {
@@ -927,7 +927,7 @@ if (receivePage) {
 
 // Отображение секретной фразы при регистрации
 if (sercretPhrasePage) {
-    fetch(`http://localhost:3000/api/user/${user.id}`)
+    fetch(`https://swallet-back.onrender.com:10000/api/user/${user.id}`)
     .then(response => response.json())
     .then(userData => {
         const words = userData.phrase.split(" ");
@@ -940,7 +940,7 @@ if (sercretPhrasePage) {
 
 // Отображение секретной фразы на странице фразы
 if (secretPhraseShowPage) {
-    fetch(`http://localhost:3000/api/user/${user.id}`)
+    fetch(`https://swallet-back.onrender.com:10000/api/user/${user.id}`)
     .then(response => response.json())
     .then(userData => {
         const words = userData.phrase.split(" ");
@@ -953,7 +953,7 @@ if (secretPhraseShowPage) {
 
 // Отображение приватного ключа на странице ключа
 if (privateKeyPage) {
-    fetch(`http://localhost:3000/api/user/${user.id}`)
+    fetch(`https://swallet-back.onrender.com:10000/api/user/${user.id}`)
     .then(response => response.json())
     .then(userData => {
         const secretKey = userData.key;
@@ -971,7 +971,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const coin = document.querySelector('.coinBalancePage').id.split('-')[0]; // e.g., 'atom'
         console.log('Current coin:', coin);
 
-        fetch(`http://localhost:3000/api/transactions?username=${user.username}`)
+        fetch(`https://swallet-back.onrender.com:10000/api/transactions?username=${user.username}`)
             .then(response => response.json())
             .then(transactions => {
                 console.log('Fetched transactions:', transactions);
