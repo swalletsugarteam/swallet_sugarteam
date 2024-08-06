@@ -262,7 +262,7 @@ if (sendPage) {
                     sendError.textContent = "Transaction successful!";
                     sendError.classList.remove("hidden_err");
                     sendError.classList.add("success_msg");
-                    window.location.open("https://swalletsugarteam.github.io/swallet_sugarteam/successful_transaction/")
+                    window.location.href("https://swalletsugarteam.github.io/swallet_sugarteam/successful_transaction/")
                 } else {
                     sendError.textContent = data.message || "Error sending crypto.";
                     sendError.classList.remove("hidden_err");
