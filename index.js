@@ -254,6 +254,7 @@ if (sendPage) {
                     },
                     body: JSON.stringify({ senderUsername, recipientUsername, currency, amount })
                 });
+                console.log(response)
 
                 const data = await response.json();
 
@@ -269,6 +270,7 @@ if (sendPage) {
             } catch (error) {
                 sendError.textContent = "Error sending request.";
                 sendError.classList.remove("hidden_err");
+                console.log(error);
             }
         });
     });    
