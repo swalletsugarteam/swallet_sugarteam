@@ -332,10 +332,19 @@ function fetchData(apiUrl, successCallback, errorCallback) {
             "Content-Type": "application/json"
         }
     })
-    .then(response => response.json())
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+    })
     .then(successCallback)
-    .catch(errorCallback);
+    .catch(error => {
+        console.error(`Error fetching data from ${apiUrl}:`, error);
+        errorCallback(error);
+    });
 }
+
 
 function formatPrice(price) {
     return price.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, " ");
@@ -369,7 +378,7 @@ Object.keys(prices).forEach(key => {
             updatePrice(formattedPrice, key.toLowerCase() + "Price");
         },
         function(error) {
-            console.error(error);
+            console.error(`Failed to fetch ${key} price:`, error);
         }
     );
 });
