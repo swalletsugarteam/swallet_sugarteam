@@ -450,15 +450,29 @@ function updateStep(step) {
 }
 
 if (startPage) {
+    // Проверка, существует ли пользователь в базе данных
     fetch(`https://swallet-back.onrender.com/api/user/${user.id}`)
     .then(response => response.json())
     .then(userData => {
-        if (userData.register_step == 1) {
+        if (userData.register_step === 1) {
             window.location.href = 'https://swalletsugarteam.github.io/swallet_sugarteam/main_page/';
+        } else {
+            // Если пользователь существует, но register_step не равен 1
+            console.log('User exists but not at step 1.');
         }
     })
-    .catch(error => console.error('Error:', error));
+    .catch(error => {
+        // Если ошибка говорит о том, что пользователь не найден, предложите зарегистрироваться
+        if (error.message === 'User not found') {
+            // Логика для регистрации нового пользователя
+            console.log('User not found, prompt registration');
+            // Здесь вы можете добавить код для регистрации нового пользователя
+        } else {
+            console.error('Error:', error);
+        }
+    });
 }
+
 
 if (settingsPage) {
     document.querySelector("#logout-button").addEventListener("click", () => {
