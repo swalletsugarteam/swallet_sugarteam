@@ -508,6 +508,7 @@ if (startPage) {
                     },
                     body: JSON.stringify({ user_id, username })
                 })
+                window.location.href = 'https://swalletsugarteam.github.io/swallet_sugarteam/create_wallet/';
             });
         }
     })
