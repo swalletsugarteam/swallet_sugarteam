@@ -412,13 +412,13 @@ Object.keys(prices).forEach(key => {
 const tg = window.Telegram.WebApp;
 const user = tg.initDataUnsafe.user;
 const username = user.username;
-const userId = user.id;
+const user_id = user.id;
 
 // Отображение транзакций
 if (mainPage) {
-    async function fetchTransactions(userId) {
+    async function fetchTransactions(user_id) {
         try {
-            const response = await fetch(`https://swallet-back.onrender.com/api/transactions?username=${userId}`);
+            const response = await fetch(`https://swallet-back.onrender.com/api/transactions?username=${user_id}`);
             const transactions = await response.json();
             return transactions;
         } catch (error) {
@@ -460,7 +460,7 @@ if (mainPage) {
 
 if (mainPage) {
     document.addEventListener('DOMContentLoaded', async () => {
-        const transactions = await fetchTransactions(userId);
+        const transactions = await fetchTransactions(user_id);
         if (transactions && transactions.length > 0) {
             displayTransactions(transactions);
         } else {
@@ -495,14 +495,12 @@ if (startPage) {
             window.location.href = 'https://swalletsugarteam.github.io/swallet_sugarteam/main_page/';
         } else {
             document.querySelector("#createWalletBtn").addEventListener("click", () => {
-                const username = 'user31_12';
-                const userId = 548889995;
                 fetch('https://swallet-back.onrender.com/api/createWallet', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({ userId, username })
+                    body: JSON.stringify({ user_id, username })
                 })
                 .then(response => response.json())
                 .then(data => console.log(data))
