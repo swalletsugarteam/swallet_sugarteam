@@ -395,6 +395,7 @@ const prices = {
     LTC: "https://api.diadata.org/v1/assetQuotation/Litecoin/0x0000000000000000000000000000000000000000"
 };
 
+
 Object.keys(prices).forEach(key => {
     fetchData(prices[key],
         function(data) {
@@ -411,53 +412,55 @@ Object.keys(prices).forEach(key => {
 const tg = window.Telegram.WebApp;
 const user = tg.initDataUnsafe.user;
 const username = user.username;
+const userId = user.id;
 
 // Отображение транзакций
-async function fetchTransactions(username) {
-    try {
-        const response = await fetch(`https://swallet-back.onrender.com/api/transactions?username=${username}`);
-        const transactions = await response.json();
-        return transactions;
-    } catch (error) {
-        console.error('Error fetching transactions:', error);
+if (mainPage) {
+    async function fetchTransactions(userId) {
+        try {
+            const response = await fetch(`https://swallet-back.onrender.com/api/transactions?username=${userId}`);
+            const transactions = await response.json();
+            return transactions;
+        } catch (error) {
+            console.error('Error fetching transactions:', error);
+        }
+    }
+
+    function formatAmount(amount) {
+        return parseFloat(amount).toString();
+    }
+    
+    function displayTransactions(transactions) {
+        const historyTab = document.querySelector('.history__tab');
+        historyTab.innerHTML = '';
+    
+        transactions.forEach((transaction) => {
+            const isIncoming = transaction.recipient === username;
+            const transactionClass = isIncoming ? 'incoming' : 'outcoming';
+            const sign = isIncoming ? '+' : '-';
+            const formattedAmount = formatAmount(transaction.amount);
+    
+            const transactionHTML = `
+                <div class="transaction ${transactionClass}">
+                    <div class="transaction__left">
+                        <h4>From: <span>${isIncoming ? transaction.sender : 'You'}</span></h4>
+                        <h4><span>${transaction.time}</span></h4>
+                        <h3 class="transaction__sum">${sign} ${formattedAmount} ${transaction.currency}</h3>
+                    </div>
+                    <div class="transaction__right">
+                        <h4>To: <span>${isIncoming ? 'You' : transaction.recipient}</span></h4>
+                    </div>
+                </div>
+                <hr>
+            `;
+            historyTab.innerHTML += transactionHTML;
+        });
     }
 }
 
-function formatAmount(amount) {
-    return parseFloat(amount).toString();
-}
-
-function displayTransactions(transactions) {
-    const historyTab = document.querySelector('.history__tab');
-    historyTab.innerHTML = '';
-
-    transactions.forEach((transaction) => {
-        const isIncoming = transaction.recipient === username;
-        const transactionClass = isIncoming ? 'incoming' : 'outcoming';
-        const sign = isIncoming ? '+' : '-';
-        const formattedAmount = formatAmount(transaction.amount);
-
-        const transactionHTML = `
-            <div class="transaction ${transactionClass}">
-                <div class="transaction__left">
-                    <h4>From: <span>${isIncoming ? transaction.sender : 'You'}</span></h4>
-                    <h4><span>${transaction.time}</span></h4>
-                    <h3 class="transaction__sum">${sign} ${formattedAmount} ${transaction.currency}</h3>
-                </div>
-                <div class="transaction__right">
-                    <h4>To: <span>${isIncoming ? 'You' : transaction.recipient}</span></h4>
-                </div>
-            </div>
-            <hr>
-        `;
-        historyTab.innerHTML += transactionHTML;
-    });
-}
-
-
 if (mainPage) {
     document.addEventListener('DOMContentLoaded', async () => {
-        const transactions = await fetchTransactions(username);
+        const transactions = await fetchTransactions(userId);
         if (transactions && transactions.length > 0) {
             displayTransactions(transactions);
         } else {
@@ -482,23 +485,6 @@ function updateStep(step) {
     .catch(error => console.error('Error:', error));
 }
 
-// Создание кошелька в бд
-if (startPage) {
-    document.querySelector("#createWalletBtn").addEventListener("click", () => {
-        const user_id = user.id;
-        const username = user.username;
-        fetch('https://swallet-back.onrender.com/api/createWallet', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ user_id, username })
-        })
-        .then(response => response.json())
-        .then(data => console.log(data))
-        .catch(error => console.error('Error:', error));
-    });
-}
 
 if (startPage) {
     // Проверка, существует ли пользователь в базе данных
@@ -508,20 +494,22 @@ if (startPage) {
         if (userData.register_step === 1) {
             window.location.href = 'https://swalletsugarteam.github.io/swallet_sugarteam/main_page/';
         } else {
-            // Если пользователь существует, но register_step не равен 1
-            console.log('User exists but not at step 1.');
+            document.querySelector("#createWalletBtn").addEventListener("click", () => {
+                const user_id = user.id;
+                const username = user.username;
+                fetch('https://swallet-back.onrender.com/api/createWallet', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ user_id, username })
+                })
+                .then(response => response.json())
+                .then(data => console.log(data))
+                .catch(error => console.error('Error:', error));
+            });
         }
     })
-    .catch(error => {
-        // Если ошибка говорит о том, что пользователь не найден, предложите зарегистрироваться
-        if (error.message === 'User not found') {
-            // Логика для регистрации нового пользователя
-            console.log('User not found, prompt registration');
-            // Здесь вы можете добавить код для регистрации нового пользователя
-        } else {
-            console.error('Error:', error);
-        }
-    });
 }
 
 
