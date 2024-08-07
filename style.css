@@ -965,3 +965,14 @@ hr {
     width: 100%;
     color: #F48181;
 }
+
+.wallet_id_container {
+    display: flex;
+    justify-content: center;
+    gap:10px;
+    align-items: center;
+}
+
+.wallet_id_container img {
+    cursor: pointer;
+}
