@@ -508,9 +508,6 @@ if (startPage) {
                     },
                     body: JSON.stringify({ user_id, username })
                 })
-                .then(response => response.json())
-                .then(data => console.log(data))
-                .catch(error => console.error('Error:', error));
             });
         }
     })
