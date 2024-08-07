@@ -236,6 +236,7 @@ if (sendPage) {
             const user = tg.initDataUnsafe.user;
 
             const senderUserId = user.id;
+            console.log(senderUserId);
             const recipientUsername = sendUsernameInput.value;
             const amount = parseFloat(sendSumInput.value);
             const currency = document.getElementById("swap-crypto-name").textContent;
