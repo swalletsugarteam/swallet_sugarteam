@@ -411,6 +411,7 @@ Object.keys(prices).forEach(key => {
 const tg = window.Telegram.WebApp;
 const user = tg.initDataUnsafe.user;
 const username = user.username;
+const user_id = user.id;
 
 // Отображение транзакций
 async function fetchTransactions(username) {
