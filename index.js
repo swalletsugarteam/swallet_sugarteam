@@ -284,23 +284,6 @@ if (sendPage) {
                     sendError.classList.remove("hidden_err");
                     sendError.classList.add("success_msg");
                     window.location.href = "https://swalletsugarteam.github.io/swallet_sugarteam/successful_transaction/"
-
-                    const botToken = '7255461637:AAG7Z-P4PzfqC00qAR6-s6ye8tGWQxVPOtA';
-                    const chatId = user_id;
-                    const text = `New transaction:\nTo: ${recipientUsername}\n${amount} ${currency}\nStatus: Completed`;
-                    
-                    const url = `https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&parse_mode=html&text=${encodeURIComponent(text)}`;
-                    
-                    fetch(url)
-                      .then(response => response.json())
-                      .then(data => {
-                        if (data.ok) {
-                          console.log('Message sent successfully:', data);
-                        } else {
-                          console.error('Error sending message:', data);
-                        }
-                      })
-                      .catch(error => console.error('Error:', error));
                 } else {
                     sendError.textContent = data.message || "Error sending crypto.";
                     sendError.classList.remove("hidden_err");
