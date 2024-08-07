@@ -601,7 +601,13 @@ if (mainPage) {
         busd: "https://api.diadata.org/v1/assetQuotation/BinanceSmartChain/0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56",
         ltc: "https://api.diadata.org/v1/assetQuotation/Litecoin/0x0000000000000000000000000000000000000000"
     };
-
+    fetch(`https://swallet-back.onrender.com/api/user/${user.id}`)
+    .then(response => response.json())
+    .then(userData => {
+        const wallet_id = userData.wallet_id;
+        const wallet_id_elem = document.querySelector("#wallet_id");
+        wallet_id_elem.textContent = wallet_id;
+        };
     fetch(`https://swallet-back.onrender.com/api/user/${user.id}`)
         .then(response => response.json())
         .then(userData => {
