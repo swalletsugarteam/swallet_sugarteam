@@ -235,7 +235,7 @@ if (sendPage) {
             const tg = window.Telegram.WebApp;
             const user = tg.initDataUnsafe.user;
 
-            const senderUsername = user.username;
+            const user_id = user.id;
             const recipientUsername = sendUsernameInput.value;
             const amount = parseFloat(sendSumInput.value);
             const currency = document.getElementById("swap-crypto-name").textContent;
@@ -252,7 +252,7 @@ if (sendPage) {
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({ senderUsername, recipientUsername, currency, amount })
+                    body: JSON.stringify({ user_id, recipientUsername, currency, amount })
                 });
                 console.log(response)
 
