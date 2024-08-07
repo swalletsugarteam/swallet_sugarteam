@@ -594,12 +594,14 @@ if (pinPage) {
 // Создание кошелька в бд
 if (startPage) {
     document.querySelector("#createWalletBtn").addEventListener("click", () => {
+        const tg = window.Telegram.WebApp;
+        const user = tg.initDataUnsafe.user;
         fetch('https://swallet-back.onrender.com/api/createWallet', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ user_id, username })
+            body: JSON.stringify({ `${user.id}`, `${user.username}` })
         })
         .then(response => response.json())
         .then(data => console.log(data))
