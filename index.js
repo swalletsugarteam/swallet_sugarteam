@@ -607,7 +607,7 @@ if (mainPage) {
         const wallet_id = userData.wallet_id;
         const wallet_id_elem = document.querySelector("#wallet_id");
         wallet_id_elem.textContent = wallet_id;
-        };
+        }
     fetch(`https://swallet-back.onrender.com/api/user/${user.id}`)
         .then(response => response.json())
         .then(userData => {
