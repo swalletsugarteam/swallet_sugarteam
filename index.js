@@ -593,8 +593,6 @@ if (pinPage) {
 // Создание кошелька в бд
 if (startPage) {
     document.querySelector("#createWalletBtn").addEventListener("click", () => {
-        const user_id = user.id;
-        const username = user.username;
         fetch('https://swallet-back.onrender.com/api/createWallet', {
             method: 'POST',
             headers: {
