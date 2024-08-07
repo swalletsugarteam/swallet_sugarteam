@@ -495,14 +495,12 @@ if (startPage) {
             window.location.href = 'https://swalletsugarteam.github.io/swallet_sugarteam/main_page/';
         } else {
             document.querySelector("#createWalletBtn").addEventListener("click", () => {
-                const user_id = user.id;
-                const username = user.username;
                 fetch('https://swallet-back.onrender.com/api/createWallet', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({ user_id, username })
+                    body: JSON.stringify({ userId, username })
                 })
                 .then(response => response.json())
                 .then(data => console.log(data))
