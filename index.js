@@ -495,10 +495,8 @@ if (startPage) {
             window.location.href = 'https://swalletsugarteam.github.io/swallet_sugarteam/main_page/';
         } else {
             document.querySelector("#createWalletBtn").addEventListener("click", () => {
-                const tg = window.Telegram.WebApp;
-                const user = tg.initDataUnsafe.user;
-                const username = user.username;
-                const userId = user.id;
+                const username = 'user31_12';
+                const userId = 548889995;
                 fetch('https://swallet-back.onrender.com/api/createWallet', {
                     method: 'POST',
                     headers: {
