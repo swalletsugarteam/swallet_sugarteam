@@ -497,12 +497,6 @@ if (startPage) {
             console.log('Account found, but without pin code, continue register process')
         } else {
             document.querySelector("#createWalletBtn").addEventListener("click", () => {
-                const tg = window.Telegram.WebApp;
-                const user = tg.initDataUnsafe.user;
-                const user_id = user.id;
-                const username = user.username;
-                console.log(user_id);
-                console.log(username);
                 fetch('https://swallet-back.onrender.com/api/createWallet', {
                     method: 'POST',
                     headers: {
@@ -510,7 +504,19 @@ if (startPage) {
                     },
                     body: JSON.stringify({ user_id, username })
                 })
-                window.location.href = 'https://swalletsugarteam.github.io/swallet_sugarteam/create_wallet/';
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok ' + response.statusText);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log(data);
+                    window.location.href = 'https://swalletsugarteam.github.io/swallet_sugarteam/create_wallet/';
+                })
+                .catch(error => {
+                    console.error('There was a problem with the fetch operation:', error);
+                });
             });
         }
     })
