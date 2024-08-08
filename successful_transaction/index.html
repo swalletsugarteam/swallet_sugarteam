@@ -52,7 +52,7 @@
     const username = tg.initDataUnsafe.user.username;
 
     try {
-        const response = await fetch(`http://13.49.66.190:4000/api/lastTransaction?username=${username}`);
+        const response = await fetch(`https://swallet-back.onrender.com/api/lastTransaction?username=${username}`);
         const transaction = await response.json();
 
         if (response.ok) {
