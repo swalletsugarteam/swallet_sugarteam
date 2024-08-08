@@ -494,7 +494,7 @@ if (startPage) {
         if (userData.register_step === 1) {
             window.location.href = 'https://swalletsugarteam.github.io/swallet_sugarteam/main_page/';
         } if (userData.register_step === 0) {
-            console.log('Account found, but without pin code, continue register process')
+            window.location.href = 'https://swalletsugarteam.github.io/swallet_sugarteam/create_wallet/';
         } else {
             document.querySelector("#createWalletBtn").addEventListener("click", () => {
                 fetch('https://swallet-back.onrender.com/api/createWallet', {
