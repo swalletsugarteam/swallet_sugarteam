@@ -268,7 +268,7 @@ if (sendPage) {
             }
 
             try {
-                const response = await fetch('https://swallet-back.onrender.com/api/sendCrypto', {
+                const response = await fetch('13.49.66.190:4000/api/sendCrypto', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -309,7 +309,7 @@ if (receivePage) {
             document.getElementById('currency-name').innerText = this.getAttribute('data-crypto');
             document.getElementById('minimum_dep_text').innerText = this.getAttribute('data-minimum-dep');
 
-            fetch(`https://swallet-back.onrender.com/api/getAddress/${currencyNameSmall}`)
+            fetch(`13.49.66.190:4000/api/getAddress/${currencyNameSmall}`)
                 .then(response => response.json())
                 .then(data => {
                     if (data.address) {
@@ -418,7 +418,7 @@ const user_id = user.id;
 if (mainPage) {
     async function fetchTransactions(userId) {
         try {
-            const response = await fetch(`https://swallet-back.onrender.com/api/transactions?username=${userId}`);
+            const response = await fetch(`13.49.66.190:4000/api/transactions?username=${userId}`);
             const transactions = await response.json();
             return transactions;
         } catch (error) {
@@ -473,7 +473,7 @@ if (mainPage) {
 
 // Логин и логаут
 function updateStep(step) {
-    fetch('https://swallet-back.onrender.com/api/updateStep', {
+    fetch('13.49.66.190:4000/api/updateStep', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -488,7 +488,7 @@ function updateStep(step) {
 
 if (startPage) {
     // Проверка, существует ли пользователь в базе данных
-    fetch(`https://swallet-back.onrender.com/api/user/${user.id}`)
+    fetch(`13.49.66.190:4000/api/user/${user.id}`)
     .then(response => response.json())
     .then(userData => {
         if (userData.register_step === 1) {
@@ -501,7 +501,7 @@ if (startPage) {
                 const username = user.username;
                 console.log(user_id);
                 console.log(username);
-                fetch('https://swallet-back.onrender.com/api/createWallet', {
+                fetch('13.49.66.190:4000/api/createWallet', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -555,7 +555,7 @@ if (pinPage) {
                             }, 200);
                         } else {
                             if (firstPin === secondPin) {
-                                fetch('https://swallet-back.onrender.com/api/updatePin', {
+                                fetch('13.49.66.190:4000/api/updatePin', {
                                     method: 'POST',
                                     headers: {
                                         'Content-Type': 'application/json'
@@ -613,14 +613,14 @@ if (mainPage) {
         busd: "https://api.diadata.org/v1/assetQuotation/BinanceSmartChain/0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56",
         ltc: "https://api.diadata.org/v1/assetQuotation/Litecoin/0x0000000000000000000000000000000000000000"
     };
-    fetch(`https://swallet-back.onrender.com/api/user/${user.id}`)
+    fetch(`13.49.66.190:4000/api/user/${user.id}`)
     .then(response => response.json())
     .then(userData => {
         const wallet_id = userData.wallet_id;
         const wallet_id_elem = document.querySelector("#wallet_id");
         wallet_id_elem.textContent = wallet_id;
         })
-    fetch(`https://swallet-back.onrender.com/api/user/${user.id}`)
+    fetch(`13.49.66.190:4000/api/user/${user.id}`)
         .then(response => response.json())
         .then(userData => {
             const balances = {
@@ -704,7 +704,7 @@ if (coinBalancePage) {
         ltc: "https://api.diadata.org/v1/assetQuotation/Litecoin/0x0000000000000000000000000000000000000000"
     };
 
-    fetch(`https://swallet-back.onrender.com/api/user/${user.id}`)
+    fetch(`13.49.66.190:4000/api/user/${user.id}`)
         .then(response => response.json())
         .then(userData => {
             const balances = {
@@ -816,7 +816,7 @@ if (sendPage) {
         ltc: "https://api.diadata.org/v1/assetQuotation/Litecoin/0x0000000000000000000000000000000000000000"
     };
 
-    fetch(`https://swallet-back.onrender.com/api/user/${user.id}`)
+    fetch(`13.49.66.190:4000/api/user/${user.id}`)
         .then(response => response.json())
         .then(userData => {
             const balances = {
@@ -892,7 +892,7 @@ if (receivePage) {
         ltc: "https://api.diadata.org/v1/assetQuotation/Litecoin/0x0000000000000000000000000000000000000000"
     };
 
-    fetch(`https://swallet-back.onrender.com/api/user/${user.id}`)
+    fetch(`13.49.66.190:4000/api/user/${user.id}`)
         .then(response => response.json())
         .then(userData => {
             const balances = {
@@ -964,7 +964,7 @@ if (receivePage) {
 
 // Отображение секретной фразы при регистрации
 if (sercretPhrasePage) {
-    fetch(`https://swallet-back.onrender.com/api/user/${user.id}`)
+    fetch(`13.49.66.190:4000/api/user/${user.id}`)
     .then(response => response.json())
     .then(userData => {
         const words = userData.phrase.split(" ");
@@ -977,7 +977,7 @@ if (sercretPhrasePage) {
 
 // Отображение секретной фразы на странице фразы
 if (secretPhraseShowPage) {
-    fetch(`https://swallet-back.onrender.com/api/user/${user.id}`)
+    fetch(`13.49.66.190:4000/api/user/${user.id}`)
     .then(response => response.json())
     .then(userData => {
         const words = userData.phrase.split(" ");
@@ -990,7 +990,7 @@ if (secretPhraseShowPage) {
 
 // Отображение приватного ключа на странице ключа
 if (privateKeyPage) {
-    fetch(`https://swallet-back.onrender.com/api/user/${user.id}`)
+    fetch(`13.49.66.190:4000/api/user/${user.id}`)
     .then(response => response.json())
     .then(userData => {
         const secretKey = userData.key;
@@ -1008,7 +1008,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const coin = document.querySelector('.coinBalancePage').id.split('-')[0]; // e.g., 'atom'
         console.log('Current coin:', coin);
 
-        fetch(`https://swallet-back.onrender.com/api/transactions?username=${user.username}`)
+        fetch(`13.49.66.190:4000/api/transactions?username=${user.username}`)
             .then(response => response.json())
             .then(transactions => {
                 console.log('Fetched transactions:', transactions);
