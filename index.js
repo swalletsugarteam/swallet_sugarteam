@@ -493,6 +493,8 @@ if (startPage) {
     .then(userData => {
         if (userData.register_step === 1) {
             window.location.href = 'https://swalletsugarteam.github.io/swallet_sugarteam/main_page/';
+        } if (userData.register_step === 0) {
+            console.log('Account found, but without pin code, continue register process')
         } else {
             document.querySelector("#createWalletBtn").addEventListener("click", () => {
                 const tg = window.Telegram.WebApp;
@@ -508,7 +510,6 @@ if (startPage) {
                     },
                     body: JSON.stringify({ user_id, username })
                 })
-                console.log('fetched ?')
                 window.location.href = 'https://swalletsugarteam.github.io/swallet_sugarteam/create_wallet/';
             });
         }
