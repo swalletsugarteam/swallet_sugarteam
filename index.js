@@ -582,7 +582,26 @@ if (pinPage) {
                                 .then(response => response.json())
                                 .then(data => {
                                     console.log(data);
-                                    updateStep(1);
+                                    let step = 1;
+                                    console.log('User ID:', user.id);
+                                    console.log('Step:', step);
+                                    fetch('https://swallet-back.onrender.com/api/updateStep', {
+                                        method: 'POST',
+                                        headers: {
+                                            'Content-Type': 'application/json'
+                                        },
+                                        body: JSON.stringify({ user_id: user.id, step }),
+                                        mode: 'cors',
+                                        credentials: 'include'
+                                    })
+                                    .then(response => {
+                                        if (!response.ok) {
+                                            throw new Error(`HTTP error! Status: ${response.status}`);
+                                        }
+                                        return response.json();
+                                    })
+                                    .then(data => console.log(data))
+                                    .catch(error => console.error('Error:', error));
                                     window.location.href = 'https://swalletsugarteam.github.io/swallet_sugarteam/main_page/';
                                 })
                                 .catch(error => console.error('Error:', error));
