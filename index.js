@@ -480,7 +480,9 @@ function updateStep(step) {
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ user_id: user.id, step })
+        body: JSON.stringify({ user_id: user.id, step }),
+        mode: 'cors',
+        credentials: 'include'
     })
     .then(response => {
         if (!response.ok) {
@@ -491,6 +493,7 @@ function updateStep(step) {
     .then(data => console.log(data))
     .catch(error => console.error('Error:', error));
 }
+
 
 
 if (startPage) {
