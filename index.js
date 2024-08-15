@@ -482,7 +482,12 @@ function updateStep(step) {
         },
         body: JSON.stringify({ user_id: user.id, step })
     })
-    .then(response => response.json())
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        return response.json();
+    })
     .then(data => console.log(data))
     .catch(error => console.error('Error:', error));
 }
