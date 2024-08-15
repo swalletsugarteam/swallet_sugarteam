@@ -473,6 +473,8 @@ if (mainPage) {
 
 // Логин и логаут
 function updateStep(step) {
+    console.log('User ID:', user.id);
+    console.log('Step:', step);
     fetch('https://swallet-back.onrender.com/api/updateStep', {
         method: 'POST',
         headers: {
