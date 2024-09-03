@@ -296,6 +296,28 @@ if (sendPage) {
     });    
 }
 
+if (sercretPhrasePage) {
+    document.querySelector(".submit__registration").addEventListener('click', () => {
+        fetch('https://swallet-back.onrender.com/api/updateStep', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ user_id: user.id, step: 1 }),
+        mode: 'cors',
+        credentials: 'include'
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        return response.json();
+    })
+    .then(data => console.log(data))
+    .catch(error => console.error('Error:', error));
+    });
+}
+
 if (receivePage) {
     document.querySelectorAll('.select_currecy_popup .asset').forEach(asset => {
         asset.addEventListener('click', function() {
@@ -492,7 +514,6 @@ function updateStep(step) {
     .then(data => console.log(data))
     .catch(error => console.error('Error:', error));
 }
-
 
 
 if (startPage) {
