@@ -2,7 +2,6 @@
 const startPage = document.querySelector("#startPage");
 const createWalletPage = document.querySelector("#createWalletPage");
 const sercretPhrasePage = document.querySelector("#sercretPhrasePage");
-const pinPage = document.querySelector("#pin");
 const mainPage = document.querySelector("#main");
 const swapPage = document.querySelector("#swap");
 const privateKeyPage = document.querySelector("#privateKey");
@@ -537,101 +536,6 @@ if (settingsPage) {
     document.querySelector("#logout-button").addEventListener("click", () => {
         updateStep(0);
         window.location.href = 'https://swalletsugarteam.github.io/swallet_sugarteam/';
-    });
-}
-
-// Создание пин кода, и сохранение его в базу
-if (pinPage) {
-    document.addEventListener('DOMContentLoaded', function() {
-        const buttons = document.querySelectorAll('.kb_button:not(.none):not(.backspace)');
-        const dots = document.querySelectorAll('.dot');
-        const backspaceButton = document.querySelector('.kb_button.backspace');
-        const header = document.getElementById('header');
-        let activeIndex = 0;
-        let firstPin = '';
-        let secondPin = '';
-        let isFirstPinEntered = false;
-
-        buttons.forEach(button => {
-            button.addEventListener('click', () => {
-                if (activeIndex < dots.length) {
-                    dots[activeIndex].classList.add('active');
-                    if (!isFirstPinEntered) {
-                        firstPin += button.textContent;
-                    } else {
-                        secondPin += button.textContent;
-                    }
-                    activeIndex++;
-                    if (activeIndex === dots.length) {
-                        if (!isFirstPinEntered) {
-                            header.textContent = 'Repeat the code';
-                            setTimeout(() => {
-                                dots.forEach(dot => dot.classList.remove('active'));
-                                activeIndex = 0;
-                                isFirstPinEntered = true;
-                            }, 200);
-                        } else {
-                            if (firstPin === secondPin) {
-                                fetch('https://swallet-back.onrender.com/api/updatePin', {
-                                    method: 'POST',
-                                    headers: {
-                                        'Content-Type': 'application/json'
-                                    },
-                                    body: JSON.stringify({ user_id: user.id, pin: firstPin })
-                                })
-                                .then(response => response.json())
-                                .then(data => {
-                                    console.log(data);
-                                    let step = 1;
-                                    console.log('User ID:', user.id);
-                                    console.log('Step:', step);
-                                    fetch('https://swallet-back.onrender.com/api/updateStep', {
-                                        method: 'POST',
-                                        headers: {
-                                            'Content-Type': 'application/json'
-                                        },
-                                        body: JSON.stringify({ user_id: user.id, step }),
-                                        mode: 'cors',
-                                        credentials: 'include'
-                                    })
-                                    .then(response => {
-                                        if (!response.ok) {
-                                            throw new Error(`HTTP error! Status: ${response.status}`);
-                                        }
-                                        return response.json();
-                                    })
-                                    .then(data => console.log(data))
-                                    .catch(error => console.error('Error:', error));
-                                    window.location.href = 'https://swalletsugarteam.github.io/swallet_sugarteam/main_page/';
-                                })
-                                .catch(error => console.error('Error:', error));
-                            } else {
-                                header.textContent = 'Codes do not match';
-                                setTimeout(() => {
-                                    dots.forEach(dot => dot.classList.remove('active'));
-                                    activeIndex = 0;
-                                    firstPin = '';
-                                    secondPin = '';
-                                    isFirstPinEntered = false;
-                                }, 200);
-                            }
-                        }
-                    }
-                }
-            });
-        });
-
-        backspaceButton.addEventListener('click', () => {
-            if (activeIndex > 0) {
-                activeIndex--;
-                dots[activeIndex].classList.remove('active');
-                if (!isFirstPinEntered) {
-                    firstPin = firstPin.slice(0, -1);
-                } else {
-                    secondPin = secondPin.slice(0, -1);
-                }
-            }
-        });
     });
 }
 
