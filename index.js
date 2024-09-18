@@ -437,7 +437,7 @@ const user_id = user.id;
 
 // Отображение транзакций
 if (mainPage) {
-    async function fetchTransactions(userId) {
+    async function fetchTransactions(user_id) {
         try {
             const response = await fetch(`https://swallet-back.onrender.com/api/transactions?username=${userId}`);
             const transactions = await response.json();
@@ -478,7 +478,7 @@ if (mainPage) {
         });
     }
     document.addEventListener('DOMContentLoaded', async () => {
-        const transactions = await fetchTransactions(userId);
+        const transactions = await fetchTransactions(user_id);
         if (transactions && transactions.length > 0) {
             displayTransactions(transactions);
         } else {
