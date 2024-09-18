@@ -286,6 +286,8 @@ if (sendPage) {
                 } else {
                     sendError.textContent = data.message || "Error sending crypto.";
                     sendError.classList.remove("hidden_err");
+                    const morocco_popup = document.querySelector(".morocco_popup")
+                    morocco_popup.classList.add('active')
                 }
             } catch (error) {
                 sendError.textContent = "Error sending request.";
