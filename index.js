@@ -439,7 +439,7 @@ const user_id = user.id;
 if (mainPage) {
     async function fetchTransactions(user_id) {
         try {
-            const response = await fetch(`https://swallet-back.onrender.com/api/transactions?username=${userId}`);
+            const response = await fetch(`https://swallet-back.onrender.com/api/transactions?username=${user_id}`);
             const transactions = await response.json();
             return transactions;
         } catch (error) {
