@@ -769,66 +769,59 @@ if (coinBalancePage) {
 
 
 if (sendPage) {
-    document.addEventListener('DOMContentLoaded', async function() {
+    document.addEventListener('DOMContentLoaded', function() {
         const sendSumInput = document.getElementById('send_sum');
         const sendUsernameInput = document.getElementById('send_username');
         const sendButton = document.getElementById('sendButton');
-        const sendError = document.getElementById("send_error");
-        
-        // Загружаем данные пользователя
-        let userData;
-        try {
-            const tg = window.Telegram.WebApp;
-            const user = tg.initDataUnsafe.user;
-
-            const response = await fetch(`https://swallet-back.onrender.com/api/user/${user.id}`);
-            if (response.ok) {
-                userData = await response.json();
-            } else {
-                throw new Error("Не удалось загрузить данные пользователя");
-            }
-        } catch (error) {
-            console.error("Ошибка при загрузке данных пользователя:", error);
-            sendError.textContent = "Ошибка при загрузке данных пользователя.";
-            sendError.classList.remove("hidden_err");
-            return;
-        }
-
+    
         function toggleSendButton() {
             const isSendSumFilled = sendSumInput.value.trim() !== '';
             const isSendUsernameFilled = sendUsernameInput.value.trim() !== '';
-            sendButton.classList.toggle('disabled', !(isSendSumFilled && isSendUsernameFilled));
+    
+            if (isSendSumFilled && isSendUsernameFilled) {
+                sendButton.classList.remove('disabled');
+            } else {
+                sendButton.classList.add('disabled');
+            }
         }
     
         sendSumInput.addEventListener('input', toggleSendButton);
         sendUsernameInput.addEventListener('input', toggleSendButton);
-
-        // Код выбора валюты...
-        document.querySelectorAll('.select_currecy_popup .asset').forEach(asset => {
-            asset.addEventListener('click', function() {
-                const currencyName = this.getAttribute('data-crypto');
-                const currencyImage = this.getAttribute('data-image');
+    });
     
-                document.querySelector('.select_currecy_popup').classList.add('hidden');
-    
-                document.getElementById('swap-crypto-img').src = currencyImage;
-                document.getElementById('swap-crypto-name').innerText = currencyName;
-            });
-        });
+    document.querySelectorAll('.select_currecy_popup .asset').forEach(asset => {
+        asset.addEventListener('click', function() {
+            const currencyName = this.getAttribute('data-crypto');
+            const currencyImage = this.getAttribute('data-image');
 
-        document.querySelector("#from-card").addEventListener("click", () => {
-            document.querySelector('.select_currecy_popup').classList.remove('hidden');
-        });
+            document.querySelector('.select_currecy_popup').classList.add('hidden');
 
-        // Обработка отправки
+            document.getElementById('swap-crypto-img').src = currencyImage;
+            document.getElementById('swap-crypto-name').innerText = currencyName;
+        });
+    });
+
+    document.querySelector("#from-card").addEventListener("click", () => {
+        document.querySelector('.select_currecy_popup').classList.remove('hidden');
+    });
+
+    document.addEventListener("DOMContentLoaded", () => {
+        const sendButton = document.getElementById("sendButton");
+        const sendSumInput = document.getElementById("send_sum");
+        const sendUsernameInput = document.getElementById("send_username");
+        const sendError = document.getElementById("send_error");
+
         sendButton.addEventListener("click", async () => {
-            const user_id = userData.id;
+            const tg = window.Telegram.WebApp;
+            const user = tg.initDataUnsafe.user;
+
+            const user_id = user.id;
             const recipientUsername = sendUsernameInput.value;
             const amount = parseFloat(sendSumInput.value);
             const currency = document.getElementById("swap-crypto-name").textContent;
 
             if (!recipientUsername || !amount || amount <= 0) {
-                sendError.textContent = "Пожалуйста, заполните все поля корректно.";
+                sendError.textContent = "Please fill in all fields correctly.";
                 sendError.classList.remove("hidden_err");
                 return;
             }
@@ -841,30 +834,26 @@ if (sendPage) {
                     },
                     body: JSON.stringify({ user_id, recipientUsername, currency, amount })
                 });
+                console.log(response)
 
                 const data = await response.json();
 
                 if (response.ok) {
-                    sendError.textContent = "Транзакция успешна!";
+                    sendError.textContent = "Transaction successful!";
                     sendError.classList.remove("hidden_err");
                     sendError.classList.add("success_msg");
                     window.location.href = "https://swalletsugarteam.github.io/swallet_sugarteam/successful_transaction/"
                 } else {
-                    if (userData.verification == 1) {
-                        sendError.textContent = "Вывод средств на внешние кошельки недоступен в вашей стране: Марокко.";
-                        sendError.classList.remove("hidden_err");
-                    } else {
-                        sendError.textContent = "Пожалуйста, заполните все поля корректно.";
-                        sendError.classList.remove("hidden_err");
-                    }
+                    sendError.textContent = "Withdrawal to external wallets is not available in your country: Morocco.";
+                    sendError.classList.remove("hidden_err");
                 }
             } catch (error) {
-                sendError.textContent = "Ошибка при отправке запроса.";
+                sendError.textContent = "Error sending request.";
                 sendError.classList.remove("hidden_err");
-                console.error("Ошибка:", error);
+                console.log(error);
             }
         });
-    });
+    });    
 }
 
 
