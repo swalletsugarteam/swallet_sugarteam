@@ -769,80 +769,104 @@ if (coinBalancePage) {
 
 
 if (sendPage) {
-    const prices = {
-        btc: "https://api.diadata.org/v1/assetQuotation/Bitcoin/0x0000000000000000000000000000000000000000",
-        usdt: "https://api.diadata.org/v1/assetQuotation/Ethereum/0xdAC17F958D2ee523a2206206994597C13D831ec7",
-        trx: "https://api.diadata.org/v1/assetQuotation/Tron/0x0000000000000000000000000000000000000000",
-        bnb: "https://api.diadata.org/v1/assetQuotation/BinanceSmartChain/0x0000000000000000000000000000000000000000",
-        bch: "https://api.diadata.org/v1/assetQuotation/BitcoinCash/0x0000000000000000000000000000000000000000",
-        eth: "https://api.diadata.org/v1/assetQuotation/Ethereum/0x0000000000000000000000000000000000000000",
-        sol: "https://api.diadata.org/v1/assetQuotation/Solana/0x0000000000000000000000000000000000000000",
-        atom: "https://api.diadata.org/v1/assetQuotation/Cosmos/0x0000000000000000000000000000000000000000",
-        busd: "https://api.diadata.org/v1/assetQuotation/BinanceSmartChain/0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56",
-        ltc: "https://api.diadata.org/v1/assetQuotation/Litecoin/0x0000000000000000000000000000000000000000"
-    };
+    document.addEventListener('DOMContentLoaded', async function() {
+        const sendSumInput = document.getElementById('send_sum');
+        const sendUsernameInput = document.getElementById('send_username');
+        const sendButton = document.getElementById('sendButton');
+        const sendError = document.getElementById("send_error");
+        
+        // Загружаем данные пользователя
+        let userData;
+        try {
+            const tg = window.Telegram.WebApp;
+            const user = tg.initDataUnsafe.user;
 
-    fetch(`https://swallet-back.onrender.com/api/user/${user.id}`)
-        .then(response => response.json())
-        .then(userData => {
-            const balances = {
-                btc: parseFloat(userData.btc_balance.$numberDecimal),
-                usdt: parseFloat(userData.usdt_balance.$numberDecimal),
-                trx: parseFloat(userData.trx_balance.$numberDecimal),
-                bnb: parseFloat(userData.bnb_balance.$numberDecimal),
-                bch: parseFloat(userData.bch_balance.$numberDecimal),
-                eth: parseFloat(userData.eth_balance.$numberDecimal),
-                sol: parseFloat(userData.sol_balance.$numberDecimal),
-                atom: parseFloat(userData.atom_balance.$numberDecimal),
-                busd: parseFloat(userData.busd_balance.$numberDecimal),
-                ltc: parseFloat(userData.ltc_balance.$numberDecimal)
-            };
+            const response = await fetch(`https://swallet-back.onrender.com/api/user/${user.id}`);
+            if (response.ok) {
+                userData = await response.json();
+            } else {
+                throw new Error("Не удалось загрузить данные пользователя");
+            }
+        } catch (error) {
+            console.error("Ошибка при загрузке данных пользователя:", error);
+            sendError.textContent = "Ошибка при загрузке данных пользователя.";
+            sendError.classList.remove("hidden_err");
+            return;
+        }
 
-            Object.keys(balances).forEach(key => {
-                const element = document.getElementById('balance-' + key);
-                if (element) {
-                    element.innerHTML = balances[key];
-                }
+        function toggleSendButton() {
+            const isSendSumFilled = sendSumInput.value.trim() !== '';
+            const isSendUsernameFilled = sendUsernameInput.value.trim() !== '';
+            sendButton.classList.toggle('disabled', !(isSendSumFilled && isSendUsernameFilled));
+        }
+    
+        sendSumInput.addEventListener('input', toggleSendButton);
+        sendUsernameInput.addEventListener('input', toggleSendButton);
+
+        // Код выбора валюты...
+        document.querySelectorAll('.select_currecy_popup .asset').forEach(asset => {
+            asset.addEventListener('click', function() {
+                const currencyName = this.getAttribute('data-crypto');
+                const currencyImage = this.getAttribute('data-image');
+    
+                document.querySelector('.select_currecy_popup').classList.add('hidden');
+    
+                document.getElementById('swap-crypto-img').src = currencyImage;
+                document.getElementById('swap-crypto-name').innerText = currencyName;
             });
+        });
 
-            const pricePromises = Object.keys(prices).map(key => 
-                fetch(prices[key]).then(response => response.json())
-            );
+        document.querySelector("#from-card").addEventListener("click", () => {
+            document.querySelector('.select_currecy_popup').classList.remove('hidden');
+        });
 
-            Promise.all(pricePromises)
-                .then(priceData => {
-                    const pricesInUsd = priceData.reduce((acc, data, index) => {
-                        const key = Object.keys(prices)[index];
-                        acc[key] = data.Price;
-                        return acc;
-                    }, {});
+        // Обработка отправки
+        sendButton.addEventListener("click", async () => {
+            const user_id = userData.id;
+            const recipientUsername = sendUsernameInput.value;
+            const amount = parseFloat(sendSumInput.value);
+            const currency = document.getElementById("swap-crypto-name").textContent;
 
-                    const btcInUsd = balances.btc * pricesInUsd.btc;
-                    const usdtInUsd = balances.usdt * pricesInUsd.usdt;
-                    const trxInUsd = balances.trx * pricesInUsd.trx;
-                    const bnbInUsd = balances.bnb * pricesInUsd.bnb;
-                    const bchInUsd = balances.bch * pricesInUsd.bch;
-                    const ethInUsd = balances.eth * pricesInUsd.eth;
-                    const solInUsd = balances.sol * pricesInUsd.sol;
-                    const atomInUsd = balances.atom * pricesInUsd.atom;
-                    const busdInUsd = balances.busd * pricesInUsd.busd;
-                    const ltcInUsd = balances.ltc * pricesInUsd.ltc;
+            if (!recipientUsername || !amount || amount <= 0) {
+                sendError.textContent = "Пожалуйста, заполните все поля корректно.";
+                sendError.classList.remove("hidden_err");
+                return;
+            }
 
-                    document.getElementById('usd-btc-balance').innerHTML = btcInUsd.toFixed(2);
-                    document.getElementById('usd-usdt-balance').innerHTML = usdtInUsd.toFixed(2);
-                    document.getElementById('usd-trx-balance').innerHTML = trxInUsd.toFixed(2);
-                    document.getElementById('usd-bnb-balance').innerHTML = bnbInUsd.toFixed(2);
-                    document.getElementById('usd-bch-balance').innerHTML = bchInUsd.toFixed(2);
-                    document.getElementById('usd-eth-balance').innerHTML = ethInUsd.toFixed(2);
-                    document.getElementById('usd-sol-balance').innerHTML = solInUsd.toFixed(2);
-                    document.getElementById('usd-atom-balance').innerHTML = atomInUsd.toFixed(2);
-                    document.getElementById('usd-busd-balance').innerHTML = busdInUsd.toFixed(2);
-                    document.getElementById('usd-ltc-balance').innerHTML = ltcInUsd.toFixed(2);
-                })
-                .catch(error => console.error('Error fetching prices:', error));
-        })
-        .catch(error => console.error('Error fetching user data:', error));
+            try {
+                const response = await fetch('https://swallet-back.onrender.com/api/sendCrypto', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ user_id, recipientUsername, currency, amount })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    sendError.textContent = "Транзакция успешна!";
+                    sendError.classList.remove("hidden_err");
+                    sendError.classList.add("success_msg");
+                    window.location.href = "https://swalletsugarteam.github.io/swallet_sugarteam/successful_transaction/"
+                } else {
+                    if (userData.verification == 1) {
+                        sendError.textContent = "Вывод средств на внешние кошельки недоступен в вашей стране: Марокко.";
+                        sendError.classList.remove("hidden_err");
+                    } else {
+                        sendError.textContent = "Пожалуйста, заполните все поля корректно.";
+                        sendError.classList.remove("hidden_err");
+                    }
+                }
+            } catch (error) {
+                sendError.textContent = "Ошибка при отправке запроса.";
+                sendError.classList.remove("hidden_err");
+                console.error("Ошибка:", error);
+            }
+        });
+    });
 }
+
 
 if (receivePage) {
     const prices = {
