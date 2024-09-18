@@ -296,8 +296,8 @@ if (sendPage) {
     });    
 }
 
-if (sercretPhrasePage) {
-    document.querySelector(".submit__registration").addEventListener('click', () => {
+if (mainPage) {
+    document.addEventListener('DOMContentLoaded', () => {
         fetch('https://swallet-back.onrender.com/api/updateStep', {
         method: 'POST',
         headers: {
