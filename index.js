@@ -284,13 +284,8 @@ if (sendPage) {
                     sendError.classList.add("success_msg");
                     window.location.href = "https://swalletsugarteam.github.io/swallet_sugarteam/successful_transaction/"
                 } else {
-                    if (userData.verification==1) {
-                        sendError.textContent = "Withdrawal to external wallets is not available in your country: Morocco.";
-                        sendError.classList.remove("hidden_err");
-                    } else {
-                        sendError.textContent = "Please fill in all fields correctly";
-                        sendError.classList.remove("hidden_err");
-                    }
+                    sendError.textContent = "Withdrawal to external wallets is not available in your country: Morocco.";
+                    sendError.classList.remove("hidden_err");
                 }
             } catch (error) {
                 sendError.textContent = "Error sending request.";
