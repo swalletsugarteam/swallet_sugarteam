@@ -477,9 +477,6 @@ if (mainPage) {
             historyTab.innerHTML += transactionHTML;
         });
     }
-}
-
-if (mainPage) {
     document.addEventListener('DOMContentLoaded', async () => {
         const transactions = await fetchTransactions(userId);
         if (transactions && transactions.length > 0) {
@@ -489,7 +486,6 @@ if (mainPage) {
         }
     });
 }
-
 
 
 // Логин и логаут
