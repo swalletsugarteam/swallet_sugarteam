@@ -511,79 +511,63 @@ Object.keys(prices).forEach(key => {
     );
 });
 
-async function getWalletId(user_id) {
-    try {
-        const response = await fetch('http://localhost:5000/api/getWalletId', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ user_id })  // отправляем user_id на бэкенд
-        });
-        
-        const data = await response.json(); // получаем ответ с wallet_id
-        if (response.ok) {
-            const wallet_id = data.wallet_id;
-            console.log('Wallet ID:', wallet_id);
-            return wallet_id;  // возвращаем wallet_id
-        } else {
-            console.error('Error:', data.message);
-            return null;
-        }
-    } catch (error) {
-        console.error('Fetch error:', error);
-    }
-}
-
 // Объявление телеграма
 const tg = window.Telegram.WebApp;
 const user = tg.initDataUnsafe.user;
 const username = user.username;
 const user_id = user.id;
-const wallet_id = user.wallet_id
 
 // Отображение транзакций
 if (mainPage) {
-    fetch(`https://swallet-back.onrender.com/api/transactions?username=${user.username}`)
-            .then(response => response.json())
-            .then(transactions => {
-                console.log('Fetched transactions:', transactions);
-                const historyTab = document.querySelector('.history__tab');
-                historyTab.innerHTML = '';
+    async function fetchTransactions(user_id) {
+        try {
+            const response = await fetch(`https://swallet-back.onrender.com/api/transactions?username=${username}`);
+            const transactions = await response.json();
+            return transactions;
+        } catch (error) {
+            console.error('Error fetching transactions:', error);
+        }
+    }
 
-                if (transactions.length > 0) {
-                    transactions.forEach(tx => {
-                        const isIncoming = tx.sender.toLowerCase() !== user.username.toLowerCase();
-                        const transactionClass = isIncoming ? 'incoming' : 'outgoing';
-                        const sign = isIncoming ? '+' : '-';
-                        const formattedAmount = parseFloat(tx.amount).toFixed(5).replace(/\.?0+$/, '');
-
-                        const txElement = document.createElement('div');
-                        txElement.innerHTML = `
-                            <div class="transaction ${transactionClass}">
-                                <div class="transaction__left">
-                                    <h4>From: <span>${isIncoming ? tx.sender : 'You'}</span></h4>
-                                    <h4><span>${tx.time}</span></h4>
-                                    <h3 class="transaction__sum">${sign} ${formattedAmount} ${tx.currency}</h3>
-                                </div>
-                                <div class="transaction__right">
-                                    <h4>To: <span>${isIncoming ? 'You' : tx.recipient}</span></h4>
-                                </div>
-                            </div>
-                            <hr>
-                        `;
-
-                        historyTab.appendChild(txElement);
-                    });
-                } else {
-                    historyTab.innerHTML = '<h3>History is empty</h3>';
-                }
-            })
-            .catch(error => console.error('Error fetching transactions:', error));
-    
     function formatAmount(amount) {
         return parseFloat(amount).toString();
     }
+    
+    function displayTransactions(transactions) {
+        const historyTab = document.querySelector('.history__tab');
+        historyTab.innerHTML = '';
+    
+        transactions.forEach((transaction) => {
+            const isIncoming = transaction.recipient === username;
+            const transactionClass = isIncoming ? 'incoming' : 'outcoming';
+            const sign = isIncoming ? '+' : '-';
+            const formattedAmount = formatAmount(transaction.amount);
+    
+            const transactionHTML = `
+                <div class="transaction ${transactionClass}">
+                    <div class="transaction__left">
+                        <h4>From: <span>${isIncoming ? transaction.sender : 'You'}</span></h4>
+                        <h4><span>${transaction.time}</span></h4>
+                        <h3 class="transaction__sum">${sign} ${formattedAmount} ${transaction.currency}</h3>
+                    </div>
+                    <div class="transaction__right">
+                        <h4>To: <span>${isIncoming ? 'You' : transaction.recipient}</span></h4>
+                    </div>
+                </div>
+                <hr>
+            `;
+            historyTab.innerHTML += transactionHTML;
+        });
+    }
+    document.addEventListener('DOMContentLoaded', async () => {
+        const transactions = await fetchTransactions(user_id);
+        if (transactions && transactions.length > 0) {
+            displayTransactions(transactions);
+        } else {
+            document.querySelector('.history__tab').innerHTML = '<h3>History is empty</h3>';
+        }
+    });
+}
 
 
 // Логин и логаут
