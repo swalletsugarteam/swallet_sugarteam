@@ -213,6 +213,7 @@ if (sendPage) {
         const sendSumInput = document.getElementById('send_sum');
         const sendUsernameInput = document.getElementById('send_username');
         const sendButton = document.getElementById('sendButton');
+        const sendError = document.getElementById("send_error");
 
         function toggleSendButton() {
             const isSendSumFilled = sendSumInput.value.trim() !== '';
@@ -229,6 +230,10 @@ if (sendPage) {
         sendUsernameInput.addEventListener('input', toggleSendButton);
 
         sendButton.addEventListener("click", async () => {
+            // Предотвращение множественных кликов
+            if (sendButton.classList.contains('disabled')) return; 
+            sendButton.classList.add('disabled'); // блокировка кнопки после клика
+
             const tg = window.Telegram.WebApp;
             const user = tg.initDataUnsafe.user;
 
@@ -237,11 +242,10 @@ if (sendPage) {
             const amount = parseFloat(sendSumInput.value);
             const currency = document.getElementById("swap-crypto-name").textContent;
 
-            const sendError = document.getElementById("send_error");
-
             if (!recipientUsername || !amount || amount <= 0) {
                 sendError.textContent = "Please fill in all fields correctly.";
                 sendError.classList.remove("hidden_err");
+                sendButton.classList.remove('disabled'); // разблокировать кнопку, если ошибка
                 return;
             }
 
@@ -269,10 +273,29 @@ if (sendPage) {
                 sendError.textContent = "Error sending request.";
                 sendError.classList.remove("hidden_err");
                 console.log(error);
+            } finally {
+                sendButton.classList.remove('disabled'); // разблокировка кнопки после завершения
             }
         });
     });
+
+    document.querySelectorAll('.select_currecy_popup .asset').forEach(asset => {
+        asset.addEventListener('click', function() {
+            const currencyName = this.getAttribute('data-crypto');
+            const currencyImage = this.getAttribute('data-image');
+
+            document.querySelector('.select_currecy_popup').classList.add('hidden');
+
+            document.getElementById('swap-crypto-img').src = currencyImage;
+            document.getElementById('swap-crypto-name').innerText = currencyName;
+        });
+    });
+
+    document.querySelector("#from-card").addEventListener("click", () => {
+        document.querySelector('.select_currecy_popup').classList.remove('hidden');
+    });
 }
+
 
 
 if (mainPage) {
