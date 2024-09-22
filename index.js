@@ -538,8 +538,8 @@ if (mainPage) {
         historyTab.innerHTML = '';
     
         transactions.forEach((transaction) => {
-            // Правильное определение входящей/исходящей транзакции
-            const isIncoming = transaction.recipient.toLowerCase() === username.toLowerCase();
+            // Исправленное определение входящей/исходящей транзакции
+            const isIncoming = transaction.sender.toLowerCase() !== username.toLowerCase();
             const transactionClass = isIncoming ? 'incoming' : 'outgoing';
             const sign = isIncoming ? '+' : '-';
             const formattedAmount = formatAmount(transaction.amount);
