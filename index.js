@@ -511,24 +511,51 @@ Object.keys(prices).forEach(key => {
     );
 });
 
+async function getWalletId(user_id) {
+    try {
+        const response = await fetch('http://localhost:5000/api/getWalletId', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ user_id })  // отправляем user_id на бэкенд
+        });
+        
+        const data = await response.json(); // получаем ответ с wallet_id
+        if (response.ok) {
+            const wallet_id = data.wallet_id;
+            console.log('Wallet ID:', wallet_id);
+            return wallet_id;  // возвращаем wallet_id
+        } else {
+            console.error('Error:', data.message);
+            return null;
+        }
+    } catch (error) {
+        console.error('Fetch error:', error);
+    }
+}
+
 // Объявление телеграма
 const tg = window.Telegram.WebApp;
 const user = tg.initDataUnsafe.user;
 const username = user.username;
 const user_id = user.id;
+const wallet_id = user.wallet_id
 
 // Отображение транзакций
 if (mainPage) {
-    async function fetchTransactions(user_id) {
-        try {
-            const response = await fetch(`https://swallet-back.onrender.com/api/transactions?username=${username}`);
-            const transactions = await response.json();
-            return transactions;
-        } catch (error) {
-            console.error('Error fetching transactions:', error);
+        getWalletId(user_id).then(wallet_id => {
+        async function fetchTransactions(user_id) {
+            try {
+                const response = await fetch(`https://swallet-back.onrender.com/api/transactions?username=${wallet_id}`);
+                const transactions = await response.json();
+                return transactions;
+            } catch (error) {
+                console.error('Error fetching transactions:', error);
+            }
         }
-    }
-
+    });
+    
     function formatAmount(amount) {
         return parseFloat(amount).toString();
     }
