@@ -213,72 +213,22 @@ if (sendPage) {
         const sendSumInput = document.getElementById('send_sum');
         const sendUsernameInput = document.getElementById('send_username');
         const sendButton = document.getElementById('sendButton');
-        const sendError = document.getElementById("send_error");
-
+    
         function toggleSendButton() {
             const isSendSumFilled = sendSumInput.value.trim() !== '';
             const isSendUsernameFilled = sendUsernameInput.value.trim() !== '';
-
+    
             if (isSendSumFilled && isSendUsernameFilled) {
                 sendButton.classList.remove('disabled');
             } else {
                 sendButton.classList.add('disabled');
             }
         }
-
+    
         sendSumInput.addEventListener('input', toggleSendButton);
         sendUsernameInput.addEventListener('input', toggleSendButton);
-
-        sendButton.addEventListener("click", async () => {
-            // Предотвращение множественных кликов
-            if (sendButton.classList.contains('disabled')) return; 
-            sendButton.classList.add('disabled'); // блокировка кнопки после клика
-
-            const tg = window.Telegram.WebApp;
-            const user = tg.initDataUnsafe.user;
-
-            const user_id = user.id;
-            const recipientUsername = sendUsernameInput.value;
-            const amount = parseFloat(sendSumInput.value);
-            const currency = document.getElementById("swap-crypto-name").textContent;
-
-            if (!recipientUsername || !amount || amount <= 0) {
-                sendError.textContent = "Please fill in all fields correctly.";
-                sendError.classList.remove("hidden_err");
-                sendButton.classList.remove('disabled'); // разблокировать кнопку, если ошибка
-                return;
-            }
-
-            try {
-                const response = await fetch('https://swallet-back.onrender.com/api/sendCrypto', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ user_id, recipientUsername, currency, amount })
-                });
-
-                const data = await response.json();
-
-                if (response.ok) {
-                    sendError.textContent = "Transaction successful!";
-                    sendError.classList.remove("hidden_err");
-                    sendError.classList.add("success_msg");
-                    window.location.href = "https://swalletsugarteam.github.io/swallet_sugarteam/successful_transaction/";
-                } else {
-                    sendError.textContent = "Withdrawal to external wallets is not available in your country: Morocco.";
-                    sendError.classList.remove("hidden_err");
-                }
-            } catch (error) {
-                sendError.textContent = "Error sending request.";
-                sendError.classList.remove("hidden_err");
-                console.log(error);
-            } finally {
-                sendButton.classList.remove('disabled'); // разблокировка кнопки после завершения
-            }
-        });
     });
-
+    
     document.querySelectorAll('.select_currecy_popup .asset').forEach(asset => {
         asset.addEventListener('click', function() {
             const currencyName = this.getAttribute('data-crypto');
@@ -294,6 +244,56 @@ if (sendPage) {
     document.querySelector("#from-card").addEventListener("click", () => {
         document.querySelector('.select_currecy_popup').classList.remove('hidden');
     });
+
+    document.addEventListener("DOMContentLoaded", () => {
+        const sendButton = document.getElementById("sendButton");
+        const sendSumInput = document.getElementById("send_sum");
+        const sendUsernameInput = document.getElementById("send_username");
+        const sendError = document.getElementById("send_error");
+
+        sendButton.addEventListener("click", async () => {
+            const tg = window.Telegram.WebApp;
+            const user = tg.initDataUnsafe.user;
+
+            const user_id = user.id;
+            const recipientUsername = sendUsernameInput.value;
+            const amount = parseFloat(sendSumInput.value);
+            const currency = document.getElementById("swap-crypto-name").textContent;
+
+            if (!recipientUsername || !amount || amount <= 0) {
+                sendError.textContent = "Please fill in all fields correctly.";
+                sendError.classList.remove("hidden_err");
+                return;
+            }
+
+            try {
+                const response = await fetch('https://swallet-back.onrender.com/api/sendCrypto', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ user_id, recipientUsername, currency, amount })
+                });
+                console.log(response)
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    sendError.textContent = "Transaction successful!";
+                    sendError.classList.remove("hidden_err");
+                    sendError.classList.add("success_msg");
+                    window.location.href = "https://swalletsugarteam.github.io/swallet_sugarteam/successful_transaction/"
+                } else {
+                    sendError.textContent = data.message || "Error sending crypto.";
+                    sendError.classList.remove("hidden_err");
+                }
+            } catch (error) {
+                sendError.textContent = "Error sending request.";
+                sendError.classList.remove("hidden_err");
+                console.log(error);
+            }
+        });
+    });    
 }
 
 
