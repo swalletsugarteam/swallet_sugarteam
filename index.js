@@ -530,7 +530,7 @@ if (mainPage) {
     }
 
     function formatAmount(amount) {
-        return parseFloat(amount).toString();
+        return parseFloat(amount).toFixed(5).replace(/\.?0+$/, '');
     }
     
     function displayTransactions(transactions) {
@@ -538,8 +538,9 @@ if (mainPage) {
         historyTab.innerHTML = '';
     
         transactions.forEach((transaction) => {
-            const isIncoming = transaction.recipient === username;
-            const transactionClass = isIncoming ? 'incoming' : 'outcoming';
+            // Правильное определение входящей/исходящей транзакции
+            const isIncoming = transaction.recipient.toLowerCase() === username.toLowerCase();
+            const transactionClass = isIncoming ? 'incoming' : 'outgoing';
             const sign = isIncoming ? '+' : '-';
             const formattedAmount = formatAmount(transaction.amount);
     
@@ -559,6 +560,7 @@ if (mainPage) {
             historyTab.innerHTML += transactionHTML;
         });
     }
+
     document.addEventListener('DOMContentLoaded', async () => {
         const transactions = await fetchTransactions(user_id);
         if (transactions && transactions.length > 0) {
@@ -568,6 +570,7 @@ if (mainPage) {
         }
     });
 }
+
 
 
 // Логин и логаут
